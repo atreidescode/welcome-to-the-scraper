@@ -1,0 +1,492 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -2112,
+        320
+      ],
+      "id": "d9e057e7-0126-4453-b2a6-574c97a88c49",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "=----------------------------\n\n🚨 ** Nouvelle Alternance trouvée !** 🚨\n\n🏢 **Entreprise :** {{ $json.company_name }}\n🎯 **Poste :** {{ $json.title }}\n📍 **Lieu :** {{ $json.location }}\n\n🔗 **[Clique ici pour voir l'offre et postuler]({{ $json.share_link }})**",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        400,
+        160
+      ],
+      "id": "1d0a5f92-0b3d-4b8b-a72a-f79deb721992",
+      "name": "Discord",
+      "webhookId": "8bdf1aed-b2b1-427e-8424-d22d0944cc07",
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "8OJNit8TDQtj1i6w",
+          "name": "Discord Webhook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1km1LyotljPBHduJhIFA5Qf3M7kw3BSmiF8eWnv-wlLc",
+          "mode": "list",
+          "cachedResultName": "Scrapper Alternances",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1km1LyotljPBHduJhIFA5Qf3M7kw3BSmiF8eWnv-wlLc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1km1LyotljPBHduJhIFA5Qf3M7kw3BSmiF8eWnv-wlLc/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -960,
+        448
+      ],
+      "id": "543939e6-c555-421f-b205-239681afed07",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "wvpia5riIHBTGbCh",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "id",
+              "field2": "ID"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.compareDatasets",
+      "typeVersion": 2.3,
+      "position": [
+        -304,
+        64
+      ],
+      "id": "547ce01e-fdcb-4ff0-bded-d90629cddb24",
+      "name": "Compare Datasets",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1km1LyotljPBHduJhIFA5Qf3M7kw3BSmiF8eWnv-wlLc",
+          "mode": "list",
+          "cachedResultName": "Scrapper Alternances",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1km1LyotljPBHduJhIFA5Qf3M7kw3BSmiF8eWnv-wlLc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1km1LyotljPBHduJhIFA5Qf3M7kw3BSmiF8eWnv-wlLc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $json.id }}",
+            "TITRE": "={{ $json.title }}",
+            "ENTREPRISE": "={{ $json.company_name }}",
+            "LIEN": "={{ $json.share_link }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "TITRE",
+              "displayName": "TITRE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ENTREPRISE",
+              "displayName": "ENTREPRISE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "LIEN",
+              "displayName": "LIEN",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        96,
+        -400
+      ],
+      "id": "ec2919d0-92f2-4cc4-8533-5b0e433ac16e",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "wvpia5riIHBTGbCh",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        560,
+        -64
+      ],
+      "id": "a7f6a61b-c77f-42c1-870c-f3827c83cb8f",
+      "name": "Wait",
+      "webhookId": "9230b75c-8555-420c-ae51-1bf15cbc2392"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        272,
+        -224
+      ],
+      "id": "217d03de-148e-4bc0-a678-736baa1c769b",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2e58bcca-c9b3-4b64-9f06-289fc7e5f7a0",
+              "name": "recherche_emploi",
+              "value": "Alternance développeur Paris",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -368,
+        576
+      ],
+      "id": "7c924abd-6d2b-4fc4-ba73-b7965e347617",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://csekhvms53-dsn.algolia.net/1/indexes/*/queries",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-algolia-api-key",
+              "value": "4bd8f6215d0cc52b26430765769e65a0"
+            },
+            {
+              "name": "x-algolia-application-id",
+              "value": "CSEKHVMS53"
+            },
+            {
+              "name": "Referer",
+              "value": "https://www.welcometothejungle.com/"
+            },
+            {
+              "name": "Origin",
+              "value": "https://www.welcometothejungle.com"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"requests\":[{\"indexName\":\"wttj_jobs_production_fr\",\"params\":\"attributesToHighlight=%5B%22name%22%5D&attributesToRetrieve=%5B%22*%22%2C%22-has_benefits%22%2C%22-has_contract_duration%22%2C%22-has_education_level%22%2C%22-has_experience_level_minimum%22%2C%22-has_remote%22%2C%22-has_salary_yearly_minimum%22%2C%22-new_profession%22%2C%22-organization.description%22%2C%22-organization_score%22%2C%22-profile%22%2C%22-rank_group_1%22%2C%22-rank_group_2%22%2C%22-rank_group_3%22%2C%22-source_stage%22%5D&clickAnalytics=true&hitsPerPage=50&maxValuesPerFacet=999&responseFields=%5B%22facets%22%2C%22hits%22%2C%22hitsPerPage%22%2C%22nbHits%22%2C%22nbPages%22%2C%22page%22%2C%22params%22%2C%22query%22%5D&analyticsTags=%5B%22page%3Aglobal_jobs%22%2C%22language%3Afr%22%5D&filters=offices.country_code%3AFR&query=alternance%20d%C3%A9veloppeur%20Paris&userToken=52bec7e4-bcf1-4e2c-90ba-979bef7013e8\"},{\"indexName\":\"wk_cms_organizations_production\",\"params\":\"attributesToHighlight=%5B%22name%22%5D&attributesToRetrieve=%5B%22descriptions%22%2C%22featured_image.url%22%2C%22jobs_count%22%2C%22logo%22%2C%22name%22%2C%22objectID%22%2C%22offices%22%2C%22profile_type%22%2C%22published_at%22%2C%22reference%22%2C%22sectors%22%2C%22slug%22%2C%22website%22%2C%22cover_image.fr%22%2C%22size.fr%22%2C%22accepts_spontaneous_application%22%5D&clickAnalytics=true&hitsPerPage=5&maxValuesPerFacet=999&analyticsTags=%5B%22page%3Aglobal_companies%22%2C%22language%3Afr%22%5D&filters=website.reference%3Awttj_fr&query=alternance%20d%C3%A9veloppeur%20Paris&userToken=52bec7e4-bcf1-4e2c-90ba-979bef7013e8\"},{\"indexName\":\"wk_cms_articles_production\",\"params\":\"attributesToHighlight=%5B%22name%22%5D&attributesToRetrieve=%5B%22_tags%22%2C%22image.large.url%22%2C%22image.thumb.url%22%2C%22name%22%2C%22objectID%22%2C%22published_at%22%2C%22reference%22%2C%22seo_description%22%2C%22seo_title%22%2C%22slug%22%2C%22summary%22%2C%22kind%22%5D&clickAnalytics=true&hitsPerPage=5&maxValuesPerFacet=999&analyticsTags=%5B%22page%3Aglobal_articles%22%2C%22language%3Afr%22%5D&filters=language%3Afr&query=alternance%20d%C3%A9veloppeur%20Paris&userToken=52bec7e4-bcf1-4e2c-90ba-979bef7013e8\"}]}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1728,
+        -160
+      ],
+      "id": "8dd5cbb7-a950-42a1-b844-02c9c9d48bbb",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8d614d9a-e7d7-4f8d-9913-c874ff140b8b",
+              "name": "title",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "cc19389d-0032-4224-80f6-f2e6f266f0d3",
+              "name": "company_name",
+              "value": "={{ $json.organization.name }}",
+              "type": "string"
+            },
+            {
+              "id": "40f31e31-fd86-476a-8344-c9927efb139d",
+              "name": "location",
+              "value": "={{ $json.offices[0].city }}",
+              "type": "string"
+            },
+            {
+              "id": "1d70632a-d8b5-4b14-a3a4-8d09a28ff7c0",
+              "name": "share_link",
+              "value": "=https://www.welcometothejungle.com/fr/companies/{{ $json.organization.slug }}/jobs/{{ $json.slug }}",
+              "type": "string"
+            },
+            {
+              "id": "ba776e89-e14a-49fd-aaca-bb8193e6d00c",
+              "name": "=id",
+              "value": "={{ $json.objectID }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1104,
+        -144
+      ],
+      "id": "6bff0de5-8e1d-403a-a0bf-109e7f896193",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "results[0].hits",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -1472,
+        -208
+      ],
+      "id": "adea51c4-c079-48dd-968f-eac108220deb",
+      "name": "Split Out1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -160,
+        -400
+      ],
+      "id": "fd12b7c1-6808-4e62-a1f3-41aa6a635519",
+      "name": "Wait1",
+      "webhookId": "89bfcb23-c02f-4fa1-9717-765dcb6d0269"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Compare Datasets",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Compare Datasets": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        []
+      ]
+    },
+    "Discord": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Discord",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        []
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Compare Datasets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "8fe558b9-3ab9-464d-b5cb-ca4e8387a475",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ce2b95c6706b3f1bb4805b32f7c122e2111503cb84bc4cd50d7014a0748b0738"
+  },
+  "id": "jbMuD00XIfgglIy7",
+  "tags": []
+}
